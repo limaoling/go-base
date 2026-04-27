@@ -8,9 +8,12 @@ import (
 
 // Response 统一响应结构
 type Response struct {
-	Code    int         `json:"code"`
-	Message string      `json:"message"`
-	Data    interface{} `json:"data,omitempty"`
+	// 状态码
+	Code int `json:"code"`
+	// 提示信息
+	Message string `json:"message"`
+	// 响应数据
+	Data interface{} `json:"data,omitempty"`
 }
 
 // Success 成功响应（默认消息）

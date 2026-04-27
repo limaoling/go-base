@@ -2,7 +2,7 @@ server:
   port: 8888
 
 database:
-  host: 127.0.0.1
+  host: 192.168.178.132
   port: 3306
   username: root
   password: 123456

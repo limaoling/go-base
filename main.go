@@ -3,12 +3,20 @@ package main
 import (
 	"go-base/config"
 	"go-base/database"
+	_ "go-base/docs"
 	"go-base/router"
 	"go-base/utils"
 	"os"
 	"strconv"
 )
 
+// @title go-base API
+// @version 1.0
+// @description go-base project API documentation
+// @BasePath /
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 func main() {
 	if err := utils.InitLogger("gin.log"); err != nil {
 		_, _ = os.Stderr.WriteString("failed to initialize logger: " + err.Error() + "\n")

@@ -6,6 +6,8 @@ import (
 	"go-base/service"
 
 	"github.com/gin-gonic/gin"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"gorm.io/gorm"
 )
 
@@ -33,6 +35,8 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 		// 获取当前登录用户信息
 		protected.GET("/userInfo", userHandler.GetUserInfo)
 	}
+
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	return r
 }

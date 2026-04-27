@@ -16,17 +16,38 @@ type UserHandler struct {
 	UserService *service.UserService
 }
 
+type RegisterRequest struct {
+	// 用户姓名
+	Username string `json:"username" binding:"required,min=2,max=50"`
+	// 用户密码
+	Password string `json:"password" binding:"required,min=6,max=50"`
+	// 用户邮箱
+	Email string `json:"email" binding:"required,email"`
+}
+
+type LoginRequest struct {
+	// 用户姓名
+	Username string `json:"username" binding:"required"`
+	// 用户密码
+	Password string `json:"password" binding:"required"`
+}
+
 func NewUserHandler(userService *service.UserService) *UserHandler {
 	return &UserHandler{UserService: userService}
 }
 
 // Register 用户注册
+// @Summary 用户注册
+// @Description 创建新用户
+// @Tags 用户管理
+// @Accept json
+// @Produce json
+// @Param request body RegisterRequest true "注册参数"
+// @Success 200 {object} response.Response
+// @Failure 500 {object} response.Response
+// @Router /api/register [post]
 func (h *UserHandler) Register(c *gin.Context) {
-	var req struct {
-		Username string `json:"username" binding:"required,min=2,max=50"`
-		Password string `json:"password" binding:"required,min=6,max=50"`
-		Email    string `json:"email" binding:"required,email"`
-	}
+	var req RegisterRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		response.Error(c, err.Error())
 		return
@@ -50,11 +71,17 @@ func (h *UserHandler) Register(c *gin.Context) {
 }
 
 // Login 用户登录
+// @Summary 用户登录
+// @Description 用户名密码登录并返回 token
+// @Tags 用户管理
+// @Accept json
+// @Produce json
+// @Param request body LoginRequest true "登录参数"
+// @Success 200 {object} response.Response
+// @Failure 500 {object} response.Response
+// @Router /api/login [post]
 func (h *UserHandler) Login(c *gin.Context) {
-	var req struct {
-		Username string `json:"username" binding:"required"`
-		Password string `json:"password" binding:"required"`
-	}
+	var req LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		response.Error(c, err.Error())
 		return
@@ -97,6 +124,14 @@ func (h *UserHandler) Login(c *gin.Context) {
 }
 
 // 获取当前登录用户信息
+// @Summary 获取当前用户信息
+// @Description 需要携带 Bearer Token
+// @Tags 用户管理
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} response.Response
+// @Failure 500 {object} response.Response
+// @Router /api/userInfo [get]
 func (h *UserHandler) GetUserInfo(c *gin.Context) {
 	// 安全获取上下文中的 userId，避免类型断言 panic
 	userId, exists := c.Get("userId")
